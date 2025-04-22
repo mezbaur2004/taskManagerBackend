@@ -16,8 +16,13 @@ const mongoose=require('mongoose');
 
 app.use(cookieParser());
 
-//Security Middleware Lib Implement
-app.use(cors({ origin: "*" }));
+const corsOptions = {
+    origin: ['http://localhost:5173','','*','http://localhost:5174'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // If you're using cookies/auth (can be false if not)
+};
+
+app.use(cors(corsOptions));
 
 app.use(helmet({
     contentSecurityPolicy: false, // Disable Helmet's default CSP
