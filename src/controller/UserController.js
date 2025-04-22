@@ -16,27 +16,39 @@ exports.registration = async (req, res) => {
 
 
 
-exports.login=async(req,res)=>{
-    try{
-        let reqBody = req.body;
-        let data=await UserModel.aggregate([
-            {$match:reqBody},
-            {$project:{_id:0,email:1,firstName:1,lastName:1,mobile:1,photo:1}}
-        ])
-        if(data.length>0){
-            let Payload={exp:Math.floor(Date.now()/1000)+(10*24*60*60),data:data[0].email}
-            const jwtKey = process.env.JWT_KEY || "SecretKey12345";
-            let token=jwt.sign(Payload,jwtKey)
-            res.status(200).json({status:"success",token:token,data:data[0]});
-        }else{
-            res.status(400).json({status:"fail",data:"unauthorized"});
+exports.login = async (req, res) => {
+    try {
+        let { email, password } = req.body;
+
+        // Find user by email
+        let user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ status: "fail", data: "User not found" });
         }
 
+        // Check if password matches
+        if (user.password !== password) {
+            return res.status(400).json({ status: "fail", data: "Incorrect password" });
+        }
+
+        // Generate JWT token
+        let Payload = {
+            exp: Math.floor(Date.now() / 1000) + 10 * 24 * 60 * 60, // Token expiry
+            data: user.email
+        };
+
+        const jwtKey = process.env.JWT_KEY || "SecretKey12345";
+        let token = jwt.sign(Payload, jwtKey);
+
+        // Respond with success
+        res.status(200).json({ status: "success", token: token, data: user });
 
     } catch (err) {
-        res.status(400).json({ status: "fail", data: err.toString()});
+        res.status(400).json({ status: "fail", data: err.toString() });
     }
-}
+};
+
 
 exports.updateProfile=async(req,res)=>{
     try{
