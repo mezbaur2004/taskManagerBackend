@@ -24,6 +24,7 @@
     "mongoose": "^8.9.2",
     "nodemon": "^3.1.0",
     "package-name": "^0.1.0",
+    "serverless-http": "^3.2.0",
     "xss-clean": "^0.1.4"
   }
 }
