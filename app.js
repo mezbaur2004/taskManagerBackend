@@ -17,7 +17,7 @@ const mongoose=require('mongoose');
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: ['http://localhost:5173','','*','http://localhost:5174'],
+    origin: ['http://localhost:5173','https://mezbaur-tskmngr.vercel.app/','http://localhost:5174'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // If you're using cookies/auth (can be false if not)
 };
